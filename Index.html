@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07150f">
+<title>Scholvanta Academy</title>
+<style>
+:root {
+  --bg:#07150f; --panel:#10251a; --panel2:#173426;
+  --green:#b8f36b; --white:#f4f8f2; --muted:#a4b7aa;
+  --border:#284434;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);
+font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{padding:17px 5%;border-bottom:1px solid var(--border);
+position:sticky;top:0;background:#07150ff2;z-index:5}
+.brand{font-size:20px;font-weight:800}
+.brand span,h1 span{color:var(--green)}
+.tagline{font-size:12px;color:var(--muted)}
+.container{width:92%;max-width:1150px;margin:auto}
+.hero{padding:48px 0 25px}
+.eyebrow{color:var(--green);border:1px solid var(--border);
+padding:5px 12px;border-radius:30px;font-size:12px}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.12;margin:20px 0 12px}
+p{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:25px 0}
+.stat,.subject{background:var(--panel);border:1px solid var(--border);
+border-radius:14px;padding:16px}
+.stat strong{display:block;font-size:21px;color:var(--green)}
+.stat small{color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.exam-btn,input,select{padding:12px;border:1px solid var(--border);
+border-radius:10px;background:var(--panel);color:var(--white)}
+.exam-btn{padding:10px 20px}
+.exam-btn.active{background:var(--green);color:#102015;font-weight:bold}
+#search{flex:1;min-width:150px}
+#category{flex:1;min-width:140px}
+.subject-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.subject h3{font-size:17px;margin:0}
+.subject-top{display:flex;justify-content:space-between;gap:8px}
+.subject-icon{font-size:25px}
+.pill{display:inline-block;color:var(--green);background:#1a3826;
+border-radius:20px;padding:3px 9px;font-size:11px;margin:10px 0}
+.subject p{font-size:13px}
+.open-btn{width:100%;padding:10px;border:1px solid var(--border);
+border-radius:9px;background:var(--panel2);color:var(--green);font-weight:bold}
+.topics{display:none;border-top:1px solid var(--border);margin-top:13px;padding-top:8px}
+.subject.expanded .topics{display:block}
+.topic{background:#0a1b12;padding:10px;margin:7px 0;border-radius:8px;font-size:13px}
+.topic small{display:block;color:var(--muted)}
+#empty{display:none;text-align:center;padding:25px;background:var(--panel);border-radius:12px}
+.notice{margin:25px 0;padding:15px;background:#122b1c;border-left:3px solid var(--green);
+border-radius:8px;color:var(--muted);font-size:13px}
+footer{margin-top:45px;padding:25px;text-align:center;border-top:1px solid var(--border);
+color:var(--muted);font-size:13px}
+@media(max-width:800px){.subject-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.subject-grid{grid-template-columns:1fr}.stats{gap:6px}
+.stat{padding:10px 7px}.stat strong{font-size:17px}.stat small{font-size:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">SCHOLVANTA <span>ACADEMY</span></div>
+  <div class="tagline">Your journey. Your future. Your success.</div>
+</header>
+
+<main class="container">
+<section class="hero">
+  <span class="eyebrow">YOUR EXAM SUCCESS STARTS HERE</span>
+  <h1>Learn smarter.<br><span>Achieve more.</span></h1>
+  <p>Explore your subjects, study topic by topic, and prepare for JAMB and WAEC with a structured learning experience.</p>
+  <div class="stats">
+    <div class="stat"><strong id="subjectCount">0</strong><small>Matching subjects</small></div>
+    <div class="stat"><strong>JAMB</strong><small>UTME preparation</small></div>
+    <div class="stat"><strong>WAEC</strong><small>SSCE preparation</small></div>
+  </div>
+</section>
+
+<h2>Explore your subjects</h2>
+<p>Select your examination, then choose a subject to explore its topics.</p>
+<div class="toolbar">
+  <button class="exam-btn active" data-exam="JAMB">JAMB</button>
+  <button class="exam-btn" data-exam="WAEC">WAEC</button>
+  <input id="search" type="search" placeholder="Search subjects...">
+  <select id="category">
+    <option value="All">All categories</option>
+    <option>Core</option><option>Science</option><option>Arts</option>
+    <option>Commercial</option><option>Technology</option><option>Vocational</option>
+  </select>
+</div>
+
+<div id="subjectGrid" class="subject-grid"></div>
+<div id="empty">No matching subjects found. Try another search.</div>
+<div class="notice"><strong style="color:var(--green)">Important:</strong>
+These are starter subject and topic lists, not a complete official syllabus.
+Full notes, videos, CBT questions, student accounts and saved results will be added in later stages.
+</div>
+</main>
+<footer><strong>Scholvanta Academy</strong><br>Learn. Practise. Excel.</footer>
+
+<script>
+const subjects = [
+{name:"English Language",cat:"Core",icon:"📘",exams:["JAMB","WAEC"],topics:["Comprehension","Lexis and Structure","Oral English","Summary","Grammar"]},
+{name:"Mathematics",cat:"Core",icon:"📐",exams:["JAMB","WAEC"],topics:["Number Bases","Fractions and Percentages","Indices and Logarithms","Algebra","Geometry","Trigonometry","Statistics and Probability"]},
+{name:"Physics",cat:"Science",icon:"⚛️",exams:["JAMB","WAEC"],topics:["Measurements and Units","Motion","Force and Equilibrium","Work, Energy and Power","Waves","Electricity","Magnetism"]},
+{name:"Chemistry",cat:"Science",icon:"🧪",exams:["JAMB","WAEC"],topics:["Atomic Structure","Periodic Table","Chemical Bonding","Acids, Bases and Salts","Stoichiometry","Organic Chemistry","Electrolysis"]},
+{name:"Biology",cat:"Science",icon:"🧬",exams:["JAMB","WAEC"],topics:["Cell Structure","Nutrition","Transport Systems","Respiration","Ecology","Genetics","Evolution"]},
+{name:"Further Mathematics",cat:"Science",icon:"📊",exams:["WAEC"],topics:["Matrices","Differentiation","Integration","Vectors","Mechanics","Probability"]},
+{name:"Economics",cat:"Commercial",icon:"📈",exams:["JAMB","WAEC"],topics:["Basic Economic Concepts","Demand and Supply","Production","Market Structures","National Income","Money and Inflation","International Trade"]},
+{name:"Government",cat:"Arts",icon:"🏛️",exams:["JAMB","WAEC"],topics:["Basic Concepts of Government","Constitution","Arms of Government","Political Parties","Electoral Systems","Nigerian Political Development","International Organisations"]},
+{name:"Literature-in-English",cat:"Arts",icon:"📚",exams:["JAMB","WAEC"],topics:["Drama","Prose","Poetry","Literary Devices","Figures of Speech","Prescribed Texts"]},
+{name:"Accounting",cat:"Commercial",icon:"🧾",exams:["JAMB","WAEC"],topics:["Accounting Principles","Source Documents","Books of Original Entry","Ledger Accounts","Trial Balance","Final Accounts","Bank Reconciliation"]},
+{name:"Commerce",cat:"Commercial",icon:"🏪",exams:["JAMB","WAEC"],topics:["Trade","Retail and Wholesale","Business Organisations","Insurance","Banking","Transport","International Trade"]},
+{name:"Geography",cat:"Arts",icon:"🌍",exams:["JAMB","WAEC"],topics:["The Earth","Weather and Climate","Rocks","Population","Settlement","Map Reading","Environmental Resources"]},
+{name:"Agricultural Science",cat:"Science",icon:"🌱",exams:["JAMB","WAEC"],topics:["Soil Science","Crop Production","Animal Production","Farm Tools","Pests and Diseases","Agricultural Economics"]},
+{name:"Computer Studies",cat:"Technology",icon:"💻",exams:["WAEC"],topics:["Computer Fundamentals","Hardware and Software","Data Processing","Computer Networks","Databases","Internet Safety"]},
+{name:"Computer Science",cat:"Technology",icon:"🖥️",exams:["JAMB"],topics:["Computer Fundamentals","Data Representation","Algorithms","Programming","Networks","Database Concepts"]},
+{name:"Civic Education",cat:"Core",icon:"🤝",exams:["WAEC"],topics:["Values","Citizenship","Human Rights","Rule of Law","Democracy","National Consciousness"]},
+{name:"Christian Religious Studies",cat:"Arts",icon:"📖",exams:["JAMB","WAEC"],topics:["Old Testament Themes","New Testament Themes","Teachings of Jesus","Early Church","Christian Living"]},
+{name:"Islamic Studies",cat:"Arts",icon:"📖",exams:["JAMB","WAEC"],topics:["The Qur'an","Hadith","Tawhid","Ibadah","Sirah","Islamic Moral Teachings"]},
+{name:"History",cat:"Arts",icon:"🏺",exams:["JAMB","WAEC"],topics:["Pre-colonial Nigeria","Colonial Administration","Nationalism","Independence","African History","World History"]},
+{name:"French",cat:"Arts",icon:"🌐",exams:["JAMB","WAEC"],topics:["Grammar","Vocabulary","Reading Comprehension","Writing","Conversation","French Culture"]},
+{name:"Yoruba",cat:"Arts",icon:"🗣️",exams:["JAMB","WAEC"],topics:["Grammar","Comprehension","Oral Literature","Written Literature","Proverbs","Culture and Traditions"]},
+{name:"Igbo",cat:"Arts",icon:"🗣️",exams:["JAMB","WAEC"],topics:["Grammar","Comprehension","Oral Literature","Written Literature","Proverbs","Culture and Traditions"]},
+{name:"Hausa",cat:"Arts",icon:"🗣️",exams:["JAMB","WAEC"],topics:["Grammar","Comprehension","Oral Literature","Written Literature","Proverbs","Culture and Traditions"]},
+{name:"Technical Drawing",cat:"Technology",icon:"📏",exams:["WAEC"],topics:["Drawing Instruments","Geometric Construction","Orthographic Projection","Isometric Drawing","Sections"]},
+{name:"Visual Arts",cat:"Arts",icon:"🎨",exams:["WAEC"],topics:["Elements of Art","Design","Drawing","Painting","Sculpture","Art History"]},
+{name:"Food and Nutrition",cat:"Vocational",icon:"🍎",exams:["WAEC"],topics:["Nutrients","Meal Planning","Food Preparation","Food Preservation","Kitchen Safety","Food Hygiene"]},
+{name:"Physical Education",cat:"Core",icon:"🏃",exams:["WAEC"],topics:["Physical Fitness","Human Anatomy","Sports Rules","First Aid","Health Education"]},
+{name:"Home Management",cat:"Vocational",icon:"🏠",exams:["WAEC"],topics:["Family Resources","Home Care","Consumer Education","Household Safety","Family Relationships"]}
+];
+
+let exam="JAMB";
+const grid=document.getElementById("subjectGrid");
+const search=document.getElementById("search");
+const category=document.getElementById("category");
+
+function render(){
+  const q=search.value.trim().toLowerCase();
+  const cat=category.value;
+  const list=subjects.filter(s=>s.exams.includes(exam)&&
+    s.name.toLowerCase().includes(q)&&(cat==="All"||s.cat===cat));
+  grid.innerHTML="";
+  document.getElementById("subjectCount").textContent=list.length;
+  document.getElementById("empty").style.display=list.length?"none":"block";
+
+  list.forEach(s=>{
+    const card=document.createElement("article");
+    card.className="subject";
+    const top=document.createElement("div");
+    top.className="subject-top";
+    const title=document.createElement("h3");
+    title.textContent=s.name;
+    const icon=document.createElement("span");
+    icon.className="subject-icon";
+    icon.textContent=s.icon;
+    top.append(title,icon);
+
+    const pill=document.createElement("span");
+    pill.className="pill";
+    pill.textContent=s.cat;
+
+    const desc=document.createElement("p");
+    desc.textContent="Explore topics and prepare step by step.";
+
+    const btn=document.createElement("button");
+    btn.className="open-btn";
+    btn.textContent="Explore topics +";
+    btn.setAttribute("aria-expanded","false");
+
+    const topics=document.createElement("div");
+    topics.className="topics";
+    s.topics.forEach((t,i)=>{
+      const item=document.createElement("div");
+      item.className="topic";
+      const name=document.createElement("strong");
+      name.textContent=(i+1)+". "+t;
+      const note=document.createElement("small");
+      note.textContent="Lesson content will be added in a later stage.";
+      item.append(name,note);
+      topics.appendChild(item);
+    });
+
+    btn.addEventListener("click",()=>{
+      const opened=card.classList.toggle("expanded");
+      btn.textContent=opened?"Hide topics −":"Explore topics +";
+      btn.setAttribute("aria-expanded",String(opened));
+    });
+    card.append(top,pill,desc,btn,topics);
+    grid.appendChild(card);
+  });
+}
+
+document.querySelectorAll(".exam-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    exam=btn.dataset.exam;
+    document.querySelectorAll(".exam-btn").forEach(b=>
+      b.classList.toggle("active",b===btn));
+    render();
+  });
+});
+search.addEventListener("input",render);
+category.addEventListener("change",render);
+render();
+</script>
+</body>
+</html>
